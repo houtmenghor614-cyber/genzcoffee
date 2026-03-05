@@ -1,0 +1,443 @@
+This is a complete HTML file for your coffee shop homepage. It now features 20 product cards, a new "About Us" section placed directly under the products, and an enhanced, more beautiful footer.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>genz coffee · full collection & about</title>
+    <!-- Tailwind + Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Montserrat', sans-serif; }
+        html { scroll-behavior: smooth; }
+        .hero-full {
+            height: 85vh;
+            min-height: 600px;
+            max-height: 1000px;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+        }
+        @media (max-width: 640px) {
+            .hero-full {
+                height: 70vh;
+                min-height: 500px;
+            }
+        }
+        .slide-transition {
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .card-hover {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 30px 40px -15px rgba(0,0,0,0.3);
+        }
+        .modal-bg {
+            background: rgba(23, 18, 13, 0.85);
+            backdrop-filter: blur(8px);
+        }
+        .active-dot {
+            background-color: #b78c5a !important;
+            width: 2.5rem;
+        }
+        .cart-pulse {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        .mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        /* floating social hover */
+        .social-icon {
+            transition: all 0.2s ease;
+        }
+        .social-icon:hover {
+            transform: translateY(-5px);
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-[#fcf8f3] text-stone-800 antialiased overflow-x-hidden">
+
+    <!-- HEADER (same, with cart & toggle) -->
+    <header class="fixed top-0 w-full z-50 bg-stone-900/90 backdrop-blur-md border-b border-amber-800/30 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-800 rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-105 transition">
+                    <i class="fas fa-mug-hot text-3xl text-white drop-shadow"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-bold text-white tracking-wide">genz<span class="text-amber-400">coffee</span></span>
+                    <span class="block text-[10px] uppercase tracking-widest text-amber-300/70">est. 2025</span>
+                </div>
+            </a>
+            <nav class="hidden md:flex items-center gap-10 text-white/90 font-medium">
+                <a href="#" class="hover:text-amber-300 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-amber-400 after:transition-all hover:after:w-full">Home</a>
+                <a href="#products" class="hover:text-amber-300 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-amber-400 after:transition-all hover:after:w-full">Menu</a>
+                <a href="#about" class="hover:text-amber-300 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-amber-400 after:transition-all hover:after:w-full">About Us</a>
+                <a href="#contact" class="hover:text-amber-300 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-amber-400 after:transition-all hover:after:w-full">Contact</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button id="cartIconBtn" class="relative text-white hover:text-amber-300 transition text-2xl">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-3 bg-amber-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-lg">0</span>
+                </button>
+                <button id="menuToggle" class="md:hidden text-white text-3xl focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- mobile menu -->
+    <div id="mobileMenu" class="fixed top-0 right-0 h-full w-64 z-[60] transform translate-x-full mobile-menu shadow-2xl md:hidden">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="menuBackdrop"></div>
+        <div class="relative bg-stone-900 h-full w-full p-6 flex flex-col">
+            <button id="closeMenuBtn" class="self-end text-3xl text-stone-400 hover:text-white mb-8">
+                <i class="far fa-times-circle"></i>
+            </button>
+            <nav class="flex flex-col gap-6 text-white/90 text-lg font-medium">
+                <a href="#" class="hover:text-amber-300 transition">Home</a>
+                <a href="#products" class="hover:text-amber-300 transition">Menu</a>
+                <a href="#about" class="hover:text-amber-300 transition">About Us</a>
+                <a href="#contact" class="hover:text-amber-300 transition">Contact</a>
+                <a href="#" class="text-amber-300 text-sm mt-4"><i class="fab fa-telegram mr-2"></i>@genzcoffee</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="h-24"></div>
+
+    <!-- FULLSCREEN HERO SLIDESHOW (same) -->
+    <section class="hero-full" id="hero-slider">
+        <div class="relative w-full h-full overflow-hidden">
+            <div id="slidesWrapper" class="flex slide-transition h-full w-full">
+                <!-- slide 1 -->
+                <div class="min-w-full h-full bg-cover bg-center relative" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600');">
+                    <div class="absolute inset-0 bg-gradient-to-r from-stone-900/80 via-stone-900/40 to-transparent"></div>
+                    <div class="absolute bottom-10 md:bottom-20 left-6 md:left-16 text-white max-w-2xl">
+                        <span class="text-amber-300 text-lg md:text-xl font-semibold tracking-widest">SIGNATURE BLEND</span>
+                        <h2 class="text-5xl md:text-7xl font-bold mt-2 drop-shadow-2xl">Artisan espresso</h2>
+                        <p class="text-xl md:text-2xl mt-2 font-light drop-shadow">Single-origin · medium roast · floral notes</p>
+                    </div>
+                </div>
+                <!-- slide 2 -->
+                <div class="min-w-full h-full bg-cover bg-center relative" style="background-image: url('https://i.pinimg.com/736x/0b/1e/33/0b1e33aacaeda61bcff8918b9d7a56cb.jpg');">
+                    <div class="absolute inset-0 bg-gradient-to-l from-emerald-900/70 to-transparent"></div>
+                    <div class="absolute bottom-10 md:bottom-20 right-6 md:right-16 text-white text-right max-w-2xl">
+                        <span class="text-emerald-300 text-lg md:text-xl font-semibold tracking-widest">CEREMONIAL GRADE</span>
+                        <h2 class="text-5xl md:text-7xl font-bold mt-2 drop-shadow-2xl">Organic matcha</h2>
+                        <p class="text-xl md:text-2xl mt-2 font-light">Stone-ground · vibrant · umami</p>
+                    </div>
+                </div>
+                <!-- slide 3 -->
+                <div class="min-w-full h-full bg-cover bg-center relative" style="background-image: url('https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=1600');">
+                    <div class="absolute inset-0 bg-gradient-to-t from-amber-950/80 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-10 md:bottom-20 left-1/2 -translate-x-1/2 text-white text-center w-full px-4">
+                        <span class="text-amber-300 text-lg md:text-xl font-semibold tracking-widest">NITRO SERIES</span>
+                        <h2 class="text-5xl md:text-7xl font-bold mt-2 drop-shadow-2xl">Velvet cold brew</h2>
+                        <p class="text-xl md:text-2xl mt-2 font-light">vanilla & caramel undertones</p>
+                    </div>
+                </div>
+            </div>
+            <button id="prevSlide" class="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/30 backdrop-blur-lg hover:bg-white/50 text-xl md:text-3xl flex items-center justify-center shadow-xl transition"><i class="fas fa-chevron-left text-stone-800"></i></button>
+            <button id="nextSlide" class="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 rounded-full bg-white/30 backdrop-blur-lg hover:bg-white/50 text-xl md:text-3xl flex items-center justify-center shadow-xl transition"><i class="fas fa-chevron-right text-stone-800"></i></button>
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+                <span class="slide-dot w-3 h-3 rounded-full bg-amber-200/60 cursor-pointer transition-all" data-index="0"></span>
+                <span class="slide-dot w-3 h-3 rounded-full bg-amber-200/60 cursor-pointer transition-all" data-index="1"></span>
+                <span class="slide-dot w-3 h-3 rounded-full bg-amber-200/60 cursor-pointer transition-all" data-index="2"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCT SECTION – now with 20 cards -->
+    <section id="products" class="max-w-7xl mx-auto px-5 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-light text-stone-800">crafted <span class="font-bold text-amber-700">collection</span></h2>
+            <div class="w-32 h-1 bg-amber-600/50 mx-auto mt-3 rounded-full"></div>
+            <p class="text-stone-500 mt-4">twenty signature drinks – each fully customisable</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
+            <!-- 20 cards with detail-trigger and add-quick -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Espresso Romano","price":4.20}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600');"></div>
+                <div class="p-5 flex flex-col flex-1">
+                    <div class="flex items-center justify-between"><h3 class="text-xl font-semibold">Espresso Romano</h3><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-xs">🇮🇹</span></div>
+                    <p class="text-stone-600 text-sm mt-1">lemon zest & dark chocolate</p>
+                    <div class="mt-3 flex items-center justify-between"><span class="text-xl font-bold text-amber-800">$4.20</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs font-medium" data-product='{"name":"Espresso Romano","price":4.20}'>➕</button></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Kyoto matcha latte","price":5.50}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://i.pinimg.com/736x/c5/6a/ca/c56acabe0c71e3e492129196b239133e.jpg');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Kyoto matcha latte</h3><p class="text-stone-600 text-sm">ceremonial, oat milk</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.50</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Kyoto matcha latte","price":5.50}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Brown sugar shakerato","price":4.95}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Brown sugar shakerato</h3><p class="text-stone-600 text-sm">shaken, cinnamon</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$4.95</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Brown sugar shakerato","price":4.95}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Iced vanilla latte","price":5.20}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://i.pinimg.com/1200x/aa/24/4d/aa244d511815dd1bb73d20781786b37e.jpg');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Iced vanilla latte</h3><p class="text-stone-600 text-sm">vanilla, almond milk</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.20</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Iced vanilla latte","price":5.20}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Matcha lemonade","price":5.80}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://i.pinimg.com/1200x/8f/ff/a0/8fffa07bdd893945f2548767374d2de0.jpg');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Matcha lemonade</h3><p class="text-stone-600 text-sm">sparkling, mint</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.80</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Matcha lemonade","price":5.80}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Affogato","price":6.50}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Affogato</h3><p class="text-stone-600 text-sm">gelato + espresso</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$6.50</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Affogato","price":6.50}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Dirty matcha","price":6.20}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://i.pinimg.com/736x/f4/66/c7/f466c77a5d9a32cb7bbf52b05e6017f7.jpg');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Dirty matcha</h3><p class="text-stone-600 text-sm">matcha + espresso</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$6.20</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Dirty matcha","price":6.20}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Honey cinnamon latte","price":5.40}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Honey cinnamon latte</h3><p class="text-stone-600 text-sm">local honey</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.40</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Honey cinnamon latte","price":5.40}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Mocha latte","price":5.60}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Mocha latte</h3><p class="text-stone-600 text-sm">chocolate, espresso</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.60</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Mocha latte","price":5.60}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Caramel macchiato","price":5.80}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Caramel macchiato</h3><p class="text-stone-600 text-sm">vanilla, caramel</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.80</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Caramel macchiato","price":5.80}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Flat white","price":4.90}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Flat white</h3><p class="text-stone-600 text-sm">double espresso</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$4.90</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Flat white","price":4.90}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Chai latte","price":5.30}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Chai latte</h3><p class="text-stone-600 text-sm">spiced tea</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.30</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Chai latte","price":5.30}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Pumpkin spice latte","price":6.00}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Pumpkin spice latte</h3><p class="text-stone-600 text-sm">autumn spices</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$6.00</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Pumpkin spice latte","price":6.00}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Coconut cold brew","price":5.70}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Coconut cold brew</h3><p class="text-stone-600 text-sm">with coconut milk</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.70</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Coconut cold brew","price":5.70}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Turmeric latte","price":5.50}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Turmeric latte</h3><p class="text-stone-600 text-sm">golden milk</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.50</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Turmeric latte","price":5.50}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Salted caramel mocha","price":6.30}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Salted caramel mocha</h3><p class="text-stone-600 text-sm">sweet & salty</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$6.30</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Salted caramel mocha","price":6.30}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Vietnamese egg coffee","price":6.50}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1527515545081-5db817172677?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Vietnamese egg coffee</h3><p class="text-stone-600 text-sm">creamy, rich</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$6.50</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Vietnamese egg coffee","price":6.50}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Rose latte","price":5.90}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Rose latte</h3><p class="text-stone-600 text-sm">floral, aromatic</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.90</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Rose latte","price":5.90}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Nitro cold brew","price":6.20}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Nitro cold brew</h3><p class="text-stone-600 text-sm">velvety smooth</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$6.20</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Nitro cold brew","price":6.20}'>➕</button></div></div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col cursor-pointer detail-trigger" data-product='{"name":"Hojicha latte","price":5.50}'>
+                <div class="h-48 bg-cover bg-center" style="background-image: url('https://i.pinimg.com/1200x/76/af/37/76af373b3f014519e4d8d9cc59579c7f.jpg');"></div>
+                <div class="p-5"><h3 class="text-xl font-semibold">Hojicha latte</h3><p class="text-stone-600 text-sm">roasted green tea</p><div class="mt-3 flex justify-between"><span class="text-xl font-bold text-amber-800">$5.50</span><button class="add-quick bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 rounded-full text-xs" data-product='{"name":"Hojicha latte","price":5.50}'>➕</button></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== NEW ABOUT US SECTION (placed right after products) ===== -->
+    <section id="about" class="max-w-6xl mx-auto px-5 py-20 scroll-mt-24">
+        <div class="bg-white/70 backdrop-blur-sm rounded-4xl shadow-xl p-8 md:p-12 border border-amber-100">
+            <div class="flex flex-col md:flex-row items-center gap-10">
+                <div class="md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800" alt="coffee shop interior" class="rounded-3xl shadow-2xl object-cover h-80 w-full">
+                </div>
+                <div class="md:w-1/2 space-y-5">
+                    <span class="text-amber-600 font-semibold tracking-wider">OUR STORY</span>
+                    <h2 class="text-4xl md:text-5xl font-light text-stone-800">crafted with <span class="font-bold text-amber-700">passion</span></h2>
+                    <div class="w-20 h-1 bg-amber-500 rounded-full"></div>
+                    <p class="text-stone-600 text-lg leading-relaxed">
+                        Genz Coffee was born from a desire to bring specialty coffee culture to a new generation. We source our beans directly from sustainable farms and roast them in small batches to highlight unique flavour profiles. Every drink is made to order – choose your size, sugar level, and milk preference.
+                    </p>
+                    <p class="text-stone-600">
+                        <i class="fas fa-seedling text-amber-600 mr-2"></i> Organic, fair‑trade, and always fresh.
+                    </p>
+                    <div class="flex gap-4 pt-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-amber-800">20+</div>
+                            <div class="text-xs uppercase tracking-wide">signature drinks</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-amber-800">100%</div>
+                            <div class="text-xs uppercase tracking-wide">arabica</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-amber-800">24/7</div>
+                            <div class="text-xs uppercase tracking-wide">bot ordering</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOT SECTION (now after about) -->
+    <section id="contact" class="hero-pattern text-white py-20 mt-10">
+        <div class="max-w-6xl mx-auto px-5 text-center">
+            <i class="fas fa-robot text-6xl text-amber-400 mb-5"></i>
+            <h3 class="text-4xl font-bold mb-4">Order via <span class="text-amber-300">@genzcoffeebot</span></h3>
+            <p class="text-xl text-stone-300 max-w-2xl mx-auto">customise your drink — size, sugar level — then add to cart.</p>
+            <div class="flex justify-center gap-4 mt-10">
+                <a href="https://t.me/genzcoffeebot" target="_blank" class="bg-amber-600 hover:bg-amber-500 text-white px-8 py-4 rounded-full text-lg font-semibold flex items-center gap-3 shadow-2xl transition"><i class="fab fa-telegram fa-xl"></i> talk to bot</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BEAUTIFUL ENHANCED FOOTER ===== -->
+    <footer class="bg-stone-900 text-stone-300 pt-16 pb-8 border-t border-amber-800/30">
+        <div class="max-w-7xl mx-auto px-5">
+            <!-- main footer grid with more details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-stone-700/50">
+                <!-- brand column -->
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-mug-hot text-3xl text-amber-500"></i>
+                        <span class="text-2xl font-bold text-white">genz<span class="text-amber-400">coffee</span></span>
+                    </div>
+                    <p class="text-sm leading-relaxed">Small batch, big flavour. Brewed for the new wave.</p>
+                    <div class="flex gap-4 mt-6">
+                        <a href="https://www.instagram.com/horzer5?igsh=MTR5N3A5bWU4ZTdhZQ%3D%3D&utm_source=qr" class="social-icon text-stone-400 hover:text-amber-400 text-xl"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/share/1FHgxigcuD/?mibextid=wwXIfr" class="social-icon text-stone-400 hover:text-amber-400 text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com/@hout.menghor3?_r=1&_t=ZS-94QgwtpdyVA" class="social-icon text-stone-400 hover:text-amber-400 text-xl"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <!-- explore -->
+                <div>
+                    <h5 class="text-white font-semibold text-lg mb-4">Explore</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-amber-300 transition flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-amber-600"></i>Home</a></li>
+                        <li><a href="#products" class="hover:text-amber-300 transition flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-amber-600"></i>Menu</a></li>
+                        <li><a href="#about" class="hover:text-amber-300 transition flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-amber-600"></i>About Us</a></li>
+                        <li><a href="#contact" class="hover:text-amber-300 transition flex items-center gap-2"><i class="fas fa-chevron-right text-xs text-amber-600"></i>Contact</a></li>
+                    </ul>
+                </div>
+                <!-- contact info -->
+                <div>
+                    <h5 class="text-white font-semibold text-lg mb-4">get in touch</h5>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3"><i class="fas fa-map-pin text-amber-500 mt-1"></i><span>123 Street, Phnom Penh, Cambodia</span></li>
+                        <li class="flex items-center gap-3"><i class="fas fa-phone-alt text-amber-500"></i><span>+855 12 888 123</span></li>
+                        <li class="flex items-center gap-3"><i class="fab fa-telegram text-amber-500"></i><span>@genzcoffee</span></li>
+                        <li class="flex items-center gap-3"><i class="far fa-envelope text-amber-500"></i><span>genzcoffee@gmail.com</span></li>
+                    </ul>
+                </div>
+                <!-- opening / newsletter -->
+                <div>
+                    <h5 class="text-white font-semibold text-lg mb-4">bean dispatch</h5>
+                    <p class="text-sm mb-3">Subscribe for new drops & specials</p>
+                    <div class="flex">
+                        <input type="email" placeholder="your email" class="bg-stone-800 text-white px-4 py-2 rounded-l-full w-full focus:outline-none border border-stone-700">
+                        <button class="bg-amber-600 hover:bg-amber-500 px-5 rounded-r-full text-white"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                    <div class="mt-6 text-sm text-stone-400">
+                        <i class="far fa-clock mr-1"></i> Mon–Sun: 7am – 9pm
+                    </div>
+                </div>
+            </div>
+            <!-- bottom bar -->
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 text-xs text-stone-500">
+                <div>© 2025 genz coffee — bean to cup. all rights reserved.</div>
+                <div class="flex gap-6 mt-3 md:mt-0">
+                    <a href="#" class="hover:text-amber-300">privacy</a>
+                    <a href="#" class="hover:text-amber-300">terms</a>
+                    <a href="#" class="hover:text-amber-300">cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- DETAIL MODAL (same) -->
+    <div id="detailModal" class="fixed inset-0 modal-bg flex items-center justify-center z-[70] hidden">
+        <div class="bg-[#fffcf7] max-w-md w-full mx-5 rounded-4xl shadow-2xl p-8 relative">
+            <button id="closeDetailModal" class="absolute top-4 right-5 text-3xl text-stone-400 hover:text-stone-700"><i class="far fa-times-circle"></i></button>
+            <div class="text-center">
+                <i class="fas fa-mug-hot text-6xl text-amber-700 mb-4"></i>
+                <h3 id="detailName" class="text-3xl font-bold">Espresso Romano</h3>
+                <p id="detailBasePrice" class="text-stone-500 line-through">$4.20</p>
+                <p id="detailFinalPrice" class="text-3xl font-bold text-amber-800">$4.20</p>
+            </div>
+            <div class="mt-6">
+                <label class="block text-sm font-medium text-stone-700 mb-2">Size <span class="text-xs text-stone-400">(extra charge)</span></label>
+                <div class="flex gap-2">
+                    <button id="sizeSmall" class="size-option flex-1 border-2 border-amber-200 rounded-xl py-2 text-sm hover:border-amber-600 transition" data-size="small" data-multiplier="1.0">Small</button>
+                    <button id="sizeMedium" class="size-option flex-1 border-2 border-amber-600 bg-amber-50 rounded-xl py-2 text-sm font-semibold" data-size="medium" data-multiplier="1.2">Medium +$0.8</button>
+                    <button id="sizeLarge" class="size-option flex-1 border-2 border-amber-200 rounded-xl py-2 text-sm hover:border-amber-600 transition" data-size="large" data-multiplier="1.5">Large +$1.5</button>
+                </div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-stone-700 mb-2">Sugar (%)</label>
+                <div class="flex gap-2">
+                    <button class="sugar-option flex-1 border-2 border-amber-600 bg-amber-50 rounded-xl py-2 text-sm" data-sugar="0">0%</button>
+                    <button class="sugar-option flex-1 border-2 border-amber-200 rounded-xl py-2 text-sm hover:border-amber-600" data-sugar="25">25%</button>
+                    <button class="sugar-option flex-1 border-2 border-amber-200 rounded-xl py-2 text-sm hover:border-amber-600" data-sugar="50">50%</button>
+                    <button class="sugar-option flex-1 border-2 border-amber-200 rounded-xl py-2 text-sm hover:border-amber-600" data-sugar="75">75%</button>
+                    <button class="sugar-option flex-1 border-2 border-amber-200 rounded-xl py-2 text-sm hover:border-amber-600" data-sugar="100">100%</button>
+                </div>
+            </div>
+            <div class="mt-6 flex gap-3">
+                <button id="addToCartFromDetail" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-5 py-3 rounded-full text-lg font-medium"><i class="fas fa-cart-plus mr-2"></i>add to cart</button>
+            </div>
+            <p class="text-xs text-stone-400 text-center mt-3">* size & sugar level selected</p>
+        </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full sm:w-96 z-[80] transform transition-transform duration-300 translate-x-full">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" id="cartBackdrop"></div>
+        <div class="relative bg-white h-full w-full sm:w-96 shadow-2xl p-6 flex flex-col">
+            <div class="flex justify-between items-center border-b border-amber-200 pb-4">
+                <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fas fa-shopping-cart text-amber-700"></i> your cart</h2>
+                <button id="closeCartBtn" class="text-3xl text-stone-400 hover:text-stone-700"><i class="far fa-times-circle"></i></button>
+            </div>
+            <div id="cartItemsContainer" class="flex-1 overflow-y-auto py-4 space-y-3"><div class="text-center text-stone-400 py-8">cart is empty</div></div>
+            <div class="border-t border-amber-200 pt-4 space-y-3">
+                <div class="flex justify-between text-lg font-semibold"><span>total:</span><span id="cartTotal" class="text-amber-800">$0.00</span></div>
+                <button id="orderFromCartBtn" class="w-full bg-green-700 hover:bg-green-800 text-white font-semibold py-3 rounded-xl text-lg shadow flex items-center justify-center gap-2"><i class="fab fa-telegram"></i> order now</button>
+                <p class="text-xs text-stone-400 text-center">you'll fill details next</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkoutModal" class="fixed inset-0 modal-bg flex items-center justify-center z-[90] hidden">
+        <div class="bg-white max-w-lg w-full mx-5 rounded-4xl shadow-2xl p-8">
+            <div class="flex justify-between items-center border-b border-amber-200 pb-4"><h3 class="text-2xl font-bold flex gap-2"><i class="fas fa-clipboard-list text-amber-700"></i>complete order</h3><button id="closeCheckout" class="text-3xl text-stone-400 hover:text-stone-700"><i class="far fa-times-circle"></i></button></div>
+            <div class="mt-5 space-y-4">
+                <div><label class="block text-sm font-medium text-stone-700">👤 full name</label><input id="fullName" type="text" placeholder="Hort Menghor" class="w-full border border-amber-200 rounded-xl p-3 mt-1" required></div>
+                <div><label class="block text-sm font-medium text-stone-700">📞 phone number</label><input id="phoneNumber" type="tel" placeholder="+855 12 345 678" class="w-full border border-amber-200 rounded-xl p-3 mt-1" required></div>
+                <div><label class="block text-sm font-medium text-stone-700">🏠 address</label><textarea id="address" rows="2" placeholder="street / city" class="w-full border border-amber-200 rounded-xl p-3 mt-1" required></textarea></div>
+                <div><label class="block text-sm font-medium text-stone-700">📝 delivery notes (optional)</label><input id="notes" type="text" placeholder="ring doorbell, etc" class="w-full border border-amber-200 rounded-xl p-3 mt-1"></div>
+                <div class="bg-amber-50 p-4 rounded-xl flex justify-between"><span class="font-medium">item(s):</span><span id="checkoutItemsSummary" class="font-bold text-amber-800">item list</span></div>
+                <button id="submitOrder" class="w-full bg-green-700 hover:bg-green-800 text-white font-semibold py-4 rounded-xl text-lg shadow flex items-center justify-center gap-2"><i class="fab fa-telegram fa-xl"></i> confirm order → Telegram</button>
+                <p class="text-xs text-stone-400 text-center">* all fields except notes are required</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
